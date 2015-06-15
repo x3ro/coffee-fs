@@ -59,7 +59,7 @@
 #ifndef CFS_H_
 #define CFS_H_
 
-#include "contiki.h"
+#include "coffee-compat.h"
 
 #ifndef CFS_CONF_OFFSET_TYPE
 typedef int cfs_offset_t;

@@ -54,7 +54,6 @@
 #define PRINTF(...)
 #endif
 
-#include "contiki-conf.h"
 #include "cfs/cfs.h"
 #include "cfs-coffee-arch.h"
 #include "cfs/cfs-coffee.h"
