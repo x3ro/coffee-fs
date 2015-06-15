@@ -1,6 +1,8 @@
 build/*
 !build/.gitkeep
 
+temp/
+
 # Added by gemignore. Snippet 'C'
 # Object files
 *.o
