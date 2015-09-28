@@ -519,7 +519,7 @@ file_end(coffee_page_t start)
     COFFEE_READ(buf, sizeof(buf), (start + page) * COFFEE_PAGE_SIZE);
     for(i = COFFEE_PAGE_SIZE - 1; i >= 0; i--) {
       if(buf[i] != 0) {
-        if(page == 0 && i < sizeof(hdr)) {
+        if(page == 0 && i < (int) sizeof(hdr)) {
           return 0;
         }
         return 1 + i + (page * COFFEE_PAGE_SIZE) - sizeof(hdr);
@@ -611,6 +611,8 @@ remove_by_page(coffee_page_t page, int remove_log, int close_fds,
   if(gc_allowed) {
     collect_garbage(GC_RELUCTANT);
   }
+#else
+  gc_allowed = gc_allowed; // Supress unused variable warning
 #endif
 
   return 0;
@@ -1057,7 +1059,11 @@ cfs_seek(int fd, cfs_offset_t offset, int whence)
     return (cfs_offset_t)-1;
   }
 
-  if(new_offset < 0 || new_offset > fdp->file->max_pages * COFFEE_PAGE_SIZE) {
+  if(new_offset < 0) {
+    return -1;
+  }
+
+  if((unsigned int) new_offset > fdp->file->max_pages * COFFEE_PAGE_SIZE) {
     return -1;
   }
 
@@ -1105,7 +1111,7 @@ cfs_read(int fd, void *buf, unsigned size)
 
   fdp = &coffee_fd_set[fd];
   file = fdp->file;
-  if(fdp->offset + size > file->end) {
+  if((cfs_offset_t) (fdp->offset + size) > file->end) {
     size = file->end - fdp->offset;
   }
 
@@ -1248,6 +1254,7 @@ cfs_write(int fd, const void *buf, unsigned size)
 int
 cfs_opendir(struct cfs_dir *dir, const char *name)
 {
+  name = name; // Supress unused variable warning
   /*
    * Coffee is only guaranteed to support "/" and ".", but it does not
    * currently enforce this.
@@ -1285,6 +1292,7 @@ cfs_readdir(struct cfs_dir *dir, struct cfs_dirent *record)
 void
 cfs_closedir(struct cfs_dir *dir)
 {
+  dir = dir; // Supress unused variable warning
   return;
 }
 /*---------------------------------------------------------------------------*/
